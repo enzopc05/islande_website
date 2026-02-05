@@ -1,0 +1,380 @@
+@import "tailwindcss";
+
+:root {
+  /* Palette Magazine Haute Couture - Glacier + Basalt */
+  --glacier-ice: #C5D9E8;
+  --glacier-mist: #E8EFF5;
+  --basalt-black: #1C1C1E;
+  --basalt-charcoal: #2C2C2E;
+  --basalt-slate: #48484A;
+  --basalt-ash: #6C6C70;
+  --warm-sand: #D4A574;
+  --warm-copper: #B87750;
+  --accent-ice: #9DB4C8;
+  --pure-white: #FAFAFA;
+  --off-white: #F5F5F7;
+  
+  /* Anciennes couleurs (compatibilité) */
+  --glacier-blue: #9DB4C8;
+  --deep-ocean: #2C2C2E;
+  --ice-cyan: #C5D9E8;
+  --midnight: #1C1C1E;
+  --charcoal: #2C2C2E;
+  --slate: #48484A;
+  --ice-white: #F5F5F7;
+  --frost: #E8EFF5;
+  --aurora: #9DB4C8;
+  --gold-accent: #D4A574;
+  
+  /* Anciennes couleurs (compatibilité) */
+  --ice-blue-dark: #003D5C;
+  --ice-blue: #00BCD4;
+  --ice-blue-light: #4DD0E1;
+  --volcanic-dark: #1A1D2E;
+  --volcanic-gray: #2C3E50;
+  --volcanic-light: #6B7280;
+  --moss-green: #4A6741;
+  --moss-light: #7A9D7A;
+  --snow-white: #F0F8FF;
+  --pure-white: #FFFFFF;
+  --sunset-orange: #FF6B35;
+  --aurora-purple: #A78BFA;
+
+  --background: var(--midnight);
+  --foreground: var(--ice-white);
+  --accent: var(--glacier-blue);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--midnight);
+    --foreground: var(--ice-white);
+  }
+}
+
+/* ===== BASE STYLES ===== */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* Texture grain subtle pour effet magazine */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== TYPOGRAPHY - Magazine Editorial ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.text-display {
+  font-family: var(--font-display), serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.text-serif {
+  font-family: var(--font-serif), serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.8;
+}
+
+/* Drop cap pour style éditorial */
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display), serif;
+  font-size: 4.5em;
+  line-height: 0.9;
+  margin: 0.1em 0.1em 0 0;
+  color: #00BCD4;
+}
+
+/* ===== CRITICAL FIX: Force visible text in inputs ===== */
+input,
+textarea,
+select {
+  transition: all 0.3s ease;
+}
+
+/* Inputs sur fond clair (page admin avec glass-light) */
+.glass-light input,
+.glass-light textarea,
+.glass-light select {
+  color: var(--midnight) !important;
+  background-color: white;
+}
+
+.glass-light input::placeholder,
+.glass-light textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Inputs sur fond sombre (page admin avec glass-effect) */
+.glass-effect input,
+.glass-effect textarea,
+.glass-effect select,
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="file"],
+textarea {
+  color: white !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* ===== GLASS EFFECT ===== */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ===== EDITORIAL EFFECTS ===== */
+.glacier-gradient {
+  background: linear-gradient(135deg, 
+    var(--basalt-charcoal) 0%, 
+    var(--basalt-slate) 50%, 
+    var(--glacier-ice) 100%
+  );
+}
+
+.ice-gradient {
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(197, 217, 232, 0.1) 50%,
+    rgba(157, 180, 200, 0.15) 100%
+  );
+}
+
+/* Séparateur éditorial */
+.editorial-separator {
+  position: relative;
+  padding: 4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editorial-separator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--basalt-ash), transparent);
+}
+
+.editorial-separator-content {
+  position: relative;
+  background: var(--basalt-black);
+  padding: 0 2rem;
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  color: var(--warm-copper);
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 100%;
+  }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--midnight);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--glacier-blue), var(--deep-ocean));
+  border-radius: 6px;
+  border: 2px solid var(--midnight);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--ice-cyan), var(--glacier-blue));
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRightPanel {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-right-panel {
+  animation: slideInRightPanel 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ===== IMAGE OVERLAYS ===== */
+.image-overlay {
+  position: relative;
+}
+
+.image-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(30, 58, 95, 0.1), rgba(30, 58, 95, 0.3));
+  pointer-events: none;
+}
+
+/* ===== HOVER EFFECTS ===== */
+.hover-lift {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.5s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 212, 255, 0.25),
+    0 0 0 1px rgba(0, 212, 255, 0.1);
+}
+
+/* ===== TEXT EFFECTS ===== */
+.text-glow {
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== RESPONSIVE UTILITIES ===== */
+@media (max-width: 768px) {
+  .text-display {
+    letter-spacing: -0.01em;
+  }
+}
