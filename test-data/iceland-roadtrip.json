@@ -1,0 +1,136 @@
+{
+  "roadtrip": [
+    {
+      "day": 1,
+      "title": "Arrivée à Reykjavik",
+      "description": "Premier jour en Islande ! Arrivée à l'aéroport de Keflavik et transfert vers Reykjavik. Installation à l'hôtel et première exploration de la capitale islandaise. Promenade dans le centre-ville, visite de la rue commerçante Laugavegur et découverte de l'architecture colorée des maisons.",
+      "location": {
+        "name": "Reykjavik",
+        "lat": 64.1466,
+        "lng": -21.9426
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.1466,-21.9426,13z"
+    },
+    {
+      "day": 2,
+      "title": "Cercle d'Or - Þingvellir",
+      "description": "Début du fameux Cercle d'Or ! Première étape au parc national de Þingvellir, classé au patrimoine mondial de l'UNESCO. C'est ici que se rencontrent les plaques tectoniques eurasienne et nord-américaine. Balade dans la faille de Silfra et découverte du site historique de l'Alþingi, le plus ancien parlement du monde.",
+      "location": {
+        "name": "Parc National de Þingvellir",
+        "lat": 64.2559,
+        "lng": -21.1304
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.2559,-21.1304,13z"
+    },
+    {
+      "day": 3,
+      "title": "Cercle d'Or - Geysir & Gullfoss",
+      "description": "Continuation du Cercle d'Or avec la zone géothermale de Geysir. Observation du geyser Strokkur qui jaillit toutes les 5-10 minutes jusqu'à 30 mètres de haut ! Ensuite, direction la majestueuse cascade de Gullfoss, la 'Chute d'Or', avec ses deux niveaux et son débit impressionnant. Les embruns créent souvent de magnifiques arc-en-ciel.",
+      "location": {
+        "name": "Geysir",
+        "lat": 64.3107,
+        "lng": -20.3003
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.3107,-20.3003,13z"
+    },
+    {
+      "day": 4,
+      "title": "Côte Sud - Seljalandsfoss",
+      "description": "Route vers la côte sud de l'Islande. Arrêt à la cascade de Seljalandsfoss, l'une des plus photographiées du pays. Particularité unique : on peut marcher derrière le rideau d'eau pour une vue spectaculaire ! Attention, prévoir un imperméable car on ressort trempé mais les photos valent le coup.",
+      "location": {
+        "name": "Cascade de Seljalandsfoss",
+        "lat": 63.6156,
+        "lng": -19.9889
+      },
+      "googleMapsLink": "https://www.google.com/maps/@63.6156,-19.9889,13z"
+    },
+    {
+      "day": 5,
+      "title": "Côte Sud - Reynisfjara",
+      "description": "Découverte de la plage de sable noir de Reynisfjara. Paysage lunaire avec ses colonnes de basalte hexagonales et ses formations rocheuses Reynisdrangar émergeant de l'océan. Attention aux vagues sournoises ! Visite des villages de pêcheurs environnants et dégustation de produits locaux.",
+      "location": {
+        "name": "Plage de Reynisfjara",
+        "lat": 63.4040,
+        "lng": -19.0447
+      },
+      "googleMapsLink": "https://www.google.com/maps/@63.4040,-19.0447,13z"
+    },
+    {
+      "day": 6,
+      "title": "Skaftafell & Glacier Vatnajökull",
+      "description": "Randonnée dans le parc national de Skaftafell. Trek jusqu'à la cascade de Svartifoss, entourée de colonnes de basalte noir. L'après-midi, excursion sur le glacier Vatnajökull, le plus grand glacier d'Europe ! Marche sur la glace avec crampons, exploration de grottes de glace bleue - expérience inoubliable.",
+      "location": {
+        "name": "Parc National de Skaftafell",
+        "lat": 64.0178,
+        "lng": -16.9689
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.0178,-16.9689,13z"
+    },
+    {
+      "day": 7,
+      "title": "Jökulsárlón - Lagon Glaciaire",
+      "description": "Journée au lagon glaciaire de Jökulsárlón. Spectacle surréaliste d'icebergs flottant dans le lagon avant de dériver vers l'océan. Croisière en zodiac entre les blocs de glace millénaire d'un bleu intense. Visite de Diamond Beach où les icebergs échoués sur le sable noir brillent comme des diamants au soleil.",
+      "location": {
+        "name": "Jökulsárlón",
+        "lat": 64.0484,
+        "lng": -16.1799
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.0484,-16.1799,13z"
+    },
+    {
+      "day": 8,
+      "title": "Fjords de l'Est",
+      "description": "Route panoramique à travers les fjords de l'Est. Paysages spectaculaires de montagnes plongeant dans la mer. Arrêts dans de charmants villages de pêcheurs comme Djúpivogur et Seyðisfjörður, ce dernier connu pour son architecture colorée. Observation possible de rennes et de phoques.",
+      "location": {
+        "name": "Seyðisfjörður",
+        "lat": 65.2627,
+        "lng": -14.0145
+      },
+      "googleMapsLink": "https://www.google.com/maps/@65.2627,-14.0145,13z"
+    },
+    {
+      "day": 9,
+      "title": "Lac Mývatn",
+      "description": "Exploration de la région du lac Mývatn, paradis géologique ! Visite de Dimmuborgir, le 'château des ténèbres' avec ses formations de lave étranges. Détente aux bains naturels de Mývatn, alternative moins touristique au Blue Lagoon. Découverte du cratère de Hverfjall et des pseudocratères de Skútustaðir.",
+      "location": {
+        "name": "Lac Mývatn",
+        "lat": 65.5970,
+        "lng": -16.9148
+      },
+      "googleMapsLink": "https://www.google.com/maps/@65.5970,-16.9148,13z"
+    },
+    {
+      "day": 10,
+      "title": "Akureyri - Capitale du Nord",
+      "description": "Découverte d'Akureyri, la capitale du Nord. Visite de l'église Akureyrarkirkja et de ses jardins botaniques. Balade dans le centre-ville charmant. Excursion à Goðafoss, la 'cascade des dieux', l'une des plus spectaculaires d'Islande. Shopping et dégustation de spécialités locales.",
+      "location": {
+        "name": "Akureyri",
+        "lat": 65.6885,
+        "lng": -18.1262
+      },
+      "googleMapsLink": "https://www.google.com/maps/@65.6885,-18.1262,13z"
+    },
+    {
+      "day": 11,
+      "title": "Péninsule de Snæfellsnes",
+      "description": "Route vers la péninsule de Snæfellsnes, 'l'Islande en miniature'. Tous les paysages islandais réunis ! Visite du mont Kirkjufell, montagne la plus photographiée d'Islande. Exploration de la plage de Djúpalónssandur avec ses rochers de basalte. Vue sur le glacier Snæfellsjökull qui a inspiré Jules Verne.",
+      "location": {
+        "name": "Mont Kirkjufell",
+        "lat": 64.9247,
+        "lng": -23.3125
+      },
+      "googleMapsLink": "https://www.google.com/maps/@64.9247,-23.3125,13z"
+    },
+    {
+      "day": 12,
+      "title": "Blue Lagoon & Retour",
+      "description": "Dernière journée en Islande. Détente méritée au Blue Lagoon, le spa géothermal le plus célèbre d'Islande. Bain dans les eaux laiteuses bleu turquoise à 38°C, masque de silice, et sauna. Moment de relaxation parfait pour terminer ce road trip incroyable. Transfert vers l'aéroport avec des souvenirs plein la tête.",
+      "location": {
+        "name": "Blue Lagoon",
+        "lat": 63.8804,
+        "lng": -22.4495
+      },
+      "googleMapsLink": "https://www.google.com/maps/@63.8804,-22.4495,13z"
+    }
+  ]
+}
