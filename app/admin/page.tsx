@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { addTravelUpdate, uploadPhotos, getTravelUpdates } from '@/lib/firebase-service';
+import {
+  addGalleryPhotos,
+  addTravelUpdate,
+  deleteGalleryPhoto as deleteGalleryPhotoRemote,
+  deleteTravelUpdate,
+  getGalleryPhotos,
+  getTravelUpdates,
+  uploadGalleryPhotos,
+  uploadPhotos,
+} from '@/lib/supabase-service';
 import Header from '@/components/Header';
 import TestDataLoader from '@/components/TestDataLoader';
 import { TravelUpdate } from '@/types';
@@ -44,11 +53,15 @@ export default function AdminPage() {
     }
   }, []);
 
-  const loadGalleryPhotos = () => {
+  const loadGalleryPhotos = async () => {
     try {
       const data = localStorage.getItem('gallery_photos');
-      const photos = data ? JSON.parse(data) : [];
-      setGalleryPhotos(photos.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      const localPhotos = data ? JSON.parse(data) : [];
+      const remotePhotos = await getGalleryPhotos();
+      const allPhotos = [...remotePhotos, ...localPhotos].sort(
+        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setGalleryPhotos(allPhotos);
     } catch (error) {
       console.error('Erreur chargement photos galerie:', error);
       setGalleryPhotos([]);
@@ -64,8 +77,8 @@ export default function AdminPage() {
         setExistingUpdates(testUpdates.sort((a: TravelUpdate, b: TravelUpdate) => a.day - b.day));
       }
       
-      const firebaseData = await getTravelUpdates();
-      const allUpdates = [...firebaseData, ...testUpdates].sort((a, b) => a.day - b.day);
+      const remoteUpdates = await getTravelUpdates();
+      const allUpdates = [...remoteUpdates, ...testUpdates].sort((a, b) => a.day - b.day);
       setExistingUpdates(allUpdates);
     } catch (error) {
       console.error('Erreur lors du chargement des updates:', error);
@@ -206,7 +219,7 @@ export default function AdminPage() {
         
         updateData.photos = photoUrls;
         await addTravelUpdate(updateData);
-        setMessage(`✅ Update jour ${day} publiée sur Firebase`);
+        setMessage(`✅ Update jour ${day} publiée sur Supabase`);
         await loadExistingUpdates();
         resetForm();
       }
@@ -231,10 +244,17 @@ export default function AdminPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const deleteUpdate = (id: string) => {
+  const deleteUpdate = async (id: string) => {
     if (!confirm('Supprimer cette update ?')) return;
 
     try {
+      if (!testMode) {
+        await deleteTravelUpdate(id);
+        setMessage('🗑️ Update supprimée');
+        await loadExistingUpdates();
+        return;
+      }
+
       const localData = localStorage.getItem('test_travel_updates');
       const updates = localData ? JSON.parse(localData) : [];
       const filtered = updates.filter((u: any) => u.id !== id);
@@ -261,32 +281,46 @@ export default function AdminPage() {
     }
 
     try {
+      const resetGalleryForm = () => {
+        setGalleryPhotoFiles([]);
+        setGalleryTitle('');
+        setGalleryDescription('');
+        const fileInput = document.getElementById('galleryPhotos') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+      };
+
+      if (!testMode) {
+        const photoUrls = await uploadGalleryPhotos(galleryPhotoFiles);
+        const newPhotos = photoUrls.map((url, index) => ({
+          url,
+          title: galleryTitle || `Photo ${galleryPhotos.length + index + 1}`,
+          description: galleryDescription,
+          date: new Date().toISOString(),
+          source: 'gallery' as const,
+        }));
+
+        await addGalleryPhotos(newPhotos);
+        resetGalleryForm();
+        setMessage(`✅ ${newPhotos.length} photo(s) ajoutée(s)`);
+        await loadGalleryPhotos();
+        return;
+      }
+
       const existingPhotos = localStorage.getItem('gallery_photos');
       const photos = existingPhotos ? JSON.parse(existingPhotos) : [];
 
-      const newPhotos = galleryPhotoFiles.map((file, index) => ({
+      const newPhotos = galleryPhotoFiles.map((_, index) => ({
         id: `gallery-${Date.now()}-${index}`,
-        url: testMode ? `test-photo-gallery-${Date.now()}-${index}` : file.name,
+        url: `test-photo-gallery-${Date.now()}-${index}`,
         title: galleryTitle || `Photo ${photos.length + index + 1}`,
         description: galleryDescription,
         date: new Date().toISOString(),
         source: 'gallery' as const,
       }));
 
-      if (!testMode) {
-        setMessage('⚠️ Upload Firebase galerie non implémenté');
-        return;
-      }
-
       photos.push(...newPhotos);
       localStorage.setItem('gallery_photos', JSON.stringify(photos));
-
-      setGalleryPhotoFiles([]);
-      setGalleryTitle('');
-      setGalleryDescription('');
-      const fileInput = document.getElementById('galleryPhotos') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-
+      resetGalleryForm();
       setMessage(`✅ ${newPhotos.length} photo(s) ajoutée(s)`);
       loadGalleryPhotos();
     } catch (error) {
@@ -294,10 +328,17 @@ export default function AdminPage() {
     }
   };
 
-  const deleteGalleryPhoto = (photoId: string) => {
+  const deleteGalleryPhoto = async (photoId: string) => {
     if (!confirm('Supprimer cette photo ?')) return;
 
     try {
+      if (!testMode) {
+        await deleteGalleryPhotoRemote(photoId);
+        setMessage('🗑️ Photo supprimée');
+        await loadGalleryPhotos();
+        return;
+      }
+
       const data = localStorage.getItem('gallery_photos');
       const photos = data ? JSON.parse(data) : [];
       const filtered = photos.filter((p: any) => p.id !== photoId);
@@ -437,7 +478,7 @@ export default function AdminPage() {
               <p className="text-[10px] text-white/50 font-sans uppercase tracking-wider">
                 {testMode 
                   ? 'Données sauvegardées localement' 
-                  : 'Envoi sur Firebase + Upload photos'}
+                  : 'Envoi sur Supabase + Upload photos'}
               </p>
             </div>
             

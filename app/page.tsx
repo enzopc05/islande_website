@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { getTravelUpdates } from '@/lib/firebase-service';
+import { getTravelUpdates } from '@/lib/supabase-service';
 import { TravelUpdate } from '@/types';
 import Header from '@/components/Header';
 import HeroEditorial from '@/components/HeroEditorial';
@@ -85,11 +85,11 @@ export default function Home() {
           setLoading(false);
         }
         
-        // Puis charger Firebase en arrière-plan
-        const firebaseData = await getTravelUpdates();
+        // Puis charger Supabase en arrière-plan
+        const remoteUpdates = await getTravelUpdates();
         
         // Fusionner et trier
-        const allUpdates = [...firebaseData, ...testUpdates].sort((a, b) => 
+        const allUpdates = [...remoteUpdates, ...testUpdates].sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         
@@ -100,7 +100,7 @@ export default function Home() {
       } catch (error) {
         console.error('Error fetching updates:', error);
         
-        // En cas d'erreur Firebase, charger au moins les updates locales
+        // En cas d'erreur Supabase, charger au moins les updates locales
         const localData = localStorage.getItem('test_travel_updates');
         const testUpdates = localData ? JSON.parse(localData) : [];
         setUpdates(testUpdates);
@@ -336,7 +336,7 @@ export default function Home() {
           <div className="flex items-center justify-center gap-4 text-[10px] text-white/10 font-sans uppercase tracking-[0.3em]">
             <span>Next.js</span>
             <span>•</span>
-            <span>Firebase</span>
+            <span>Supabase</span>
             <span>•</span>
             <span>Leaflet</span>
           </div>

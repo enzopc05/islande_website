@@ -3,18 +3,8 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import { TravelUpdate } from '@/types';
+import { getGalleryPhotos, getTravelUpdates, GalleryPhoto } from '@/lib/supabase-service';
 import Image from 'next/image';
-
-interface GalleryPhoto {
-  id: string;
-  url: string;
-  title?: string;
-  description?: string;
-  date: string;
-  source?: 'update' | 'gallery'; // from travel update or direct upload
-  updateDay?: number;
-  updateTitle?: string;
-}
 
 export default function GaleriePage() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -23,20 +13,21 @@ export default function GaleriePage() {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
 
   useEffect(() => {
-    loadAllPhotos();
+    void loadAllPhotos();
   }, []);
 
-  const loadAllPhotos = () => {
+  const loadAllPhotos = async () => {
     try {
-      // Charger les photos des updates
-      const localData = localStorage.getItem('test_travel_updates');
-      const updates: TravelUpdate[] = localData ? JSON.parse(localData) : [];
-      
-      const updatePhotos: GalleryPhoto[] = updates.flatMap(update => 
+      const localUpdatesData = localStorage.getItem('test_travel_updates');
+      const localUpdates: TravelUpdate[] = localUpdatesData ? JSON.parse(localUpdatesData) : [];
+      const remoteUpdates = await getTravelUpdates();
+      const updates = [...remoteUpdates, ...localUpdates];
+
+      const updatePhotos: GalleryPhoto[] = updates.flatMap((update) =>
         (update.photos || []).map((photoUrl, index) => ({
           id: `update-${update.id}-${index}`,
           url: photoUrl,
-          title: `${update.title}`,
+          title: update.title,
           description: update.description,
           date: update.date,
           source: 'update' as const,
@@ -45,12 +36,11 @@ export default function GaleriePage() {
         }))
       );
 
-      // Charger les photos de la galerie directe
-      const galleryData = localStorage.getItem('gallery_photos');
-      const directPhotos: GalleryPhoto[] = galleryData ? JSON.parse(galleryData) : [];
+      const localGalleryData = localStorage.getItem('gallery_photos');
+      const localGallery: GalleryPhoto[] = localGalleryData ? JSON.parse(localGalleryData) : [];
+      const remoteGallery = await getGalleryPhotos();
 
-      // Fusionner et trier par date
-      const allPhotos = [...updatePhotos, ...directPhotos].sort((a, b) => 
+      const allPhotos = [...updatePhotos, ...remoteGallery, ...localGallery].sort((a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
       );
 
