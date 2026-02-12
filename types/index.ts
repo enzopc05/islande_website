@@ -9,7 +9,7 @@ export interface TravelUpdate {
     lat: number;
     lng: number;
   };
-  photos: string[]; // URLs des photos dans Firebase Storage
+  photos: string[]; // URLs des photos
   createdAt: string; // ISO string
 }
 
