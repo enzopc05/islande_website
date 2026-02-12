@@ -34,7 +34,7 @@ export default function AdminPage() {
   const [googleMapsLink, setGoogleMapsLink] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewData, setPreviewData] = useState<any>(null);
-  const [testMode, setTestMode] = useState(true);
+  const [testMode, setTestMode] = useState(false);
   const [existingUpdates, setExistingUpdates] = useState<TravelUpdate[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   
