@@ -9,17 +9,32 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from './firebase';
+import { db, storage, isFirebaseConfigured } from './firebase';
 import { TravelUpdate } from '@/types';
 
 const UPDATES_COLLECTION = 'travelUpdates';
+
+const getFirestoreOrThrow = () => {
+  if (!isFirebaseConfigured || !db) {
+    throw new Error('Firebase is not configured');
+  }
+  return db;
+};
+
+const getStorageOrThrow = () => {
+  if (!isFirebaseConfigured || !storage) {
+    throw new Error('Firebase is not configured');
+  }
+  return storage;
+};
 
 // Ajouter une nouvelle mise à jour
 export async function addTravelUpdate(
   update: Omit<TravelUpdate, 'id' | 'createdAt'>
 ): Promise<string> {
   try {
-    const docRef = await addDoc(collection(db, UPDATES_COLLECTION), {
+    const firestore = getFirestoreOrThrow();
+    const docRef = await addDoc(collection(firestore, UPDATES_COLLECTION), {
       ...update,
       createdAt: Timestamp.now(),
     });
@@ -33,6 +48,9 @@ export async function addTravelUpdate(
 // Récupérer toutes les mises à jour
 export async function getTravelUpdates(): Promise<TravelUpdate[]> {
   try {
+    if (!isFirebaseConfigured || !db) {
+      return [];
+    }
     const q = query(
       collection(db, UPDATES_COLLECTION),
       orderBy('date', 'desc')
@@ -58,7 +76,8 @@ export async function getTravelUpdates(): Promise<TravelUpdate[]> {
 export async function uploadPhoto(file: File, updateId: string): Promise<string> {
   try {
     const timestamp = Date.now();
-    const storageRef = ref(storage, `photos/${updateId}/${timestamp}_${file.name}`);
+    const firebaseStorage = getStorageOrThrow();
+    const storageRef = ref(firebaseStorage, `photos/${updateId}/${timestamp}_${file.name}`);
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
