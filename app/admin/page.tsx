@@ -701,36 +701,6 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* Mode Toggle */}
-        <div className="mb-8 p-6 border border-white/10 bg-white/5">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl">{testMode ? '🧪' : '🚀'}</span>
-                <h3 className="text-xl font-display font-black text-white tracking-tight">
-                  {testMode ? 'Mode Test' : 'Mode Production'}
-                </h3>
-              </div>
-              <p className="text-[10px] text-white/50 font-sans uppercase tracking-wider">
-                {testMode 
-                  ? 'Données sauvegardées localement' 
-                  : 'Envoi sur Supabase + Upload photos'}
-              </p>
-            </div>
-            
-            <button
-              type="button"
-              onClick={() => setTestMode(!testMode)}
-              className={`px-6 py-3 text-[10px] font-sans uppercase tracking-[0.4em] transition-all border-2 ${
-                testMode 
-                  ? 'bg-[#00BCD4] text-black border-[#00BCD4]' 
-                  : 'bg-transparent text-white/60 border-white/20 hover:border-white/40'
-              }`}
-            >
-              {testMode ? 'Activer Prod' : 'Activer Test'}
-            </button>
-          </div>
-        </div>
 
         {/* Notifications */}
         {message && (
