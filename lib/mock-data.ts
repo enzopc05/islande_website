@@ -1,10 +1,17 @@
-import { TravelUpdate } from '@/types';
+import { TravelPhoto, TravelUpdate } from '@/types';
 
 /**
  * Données de test avec de vraies images d'Islande depuis Unsplash
  * Ces données permettent de tester le site sans API ni BDD
  */
-export const mockTravelUpdates: TravelUpdate[] = [
+const buildMockPhotos = (updateId: string, urls: string[]): TravelPhoto[] =>
+  urls.map((url, index) => ({
+    id: `${updateId}-photo-${index + 1}`,
+    updateId,
+    url,
+  }));
+
+const mockTravelUpdatesRaw = [
   {
     id: 'mock-1',
     date: '2024-08-15T10:00:00Z',
@@ -19,6 +26,22 @@ export const mockTravelUpdates: TravelUpdate[] = [
     photos: [
       'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-1-spot-1',
+        day: 1,
+        name: 'Hallgrimskirkja',
+        description: 'Point de vue sur la ville',
+        location: { lat: 64.1419, lng: -21.9266 },
+      },
+      {
+        id: 'mock-1-spot-2',
+        day: 1,
+        name: 'Sun Voyager',
+        description: 'Sculpture au bord de l eau',
+        location: { lat: 64.1475, lng: -21.9226 },
+      },
     ],
     createdAt: '2024-08-15T10:00:00Z',
   },
@@ -38,6 +61,22 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1476067897447-d0c5df27b5df?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-2-spot-1',
+        day: 2,
+        name: 'Oxararfoss',
+        description: 'Petite cascade du parc',
+        location: { lat: 64.2550, lng: -21.1290 },
+      },
+      {
+        id: 'mock-2-spot-2',
+        day: 2,
+        name: 'Almannagja',
+        description: 'Faille entre les plaques',
+        location: { lat: 64.2556, lng: -21.1276 },
+      },
+    ],
     createdAt: '2024-08-16T14:30:00Z',
   },
   {
@@ -54,6 +93,22 @@ export const mockTravelUpdates: TravelUpdate[] = [
     photos: [
       'https://images.unsplash.com/photo-1505832018823-50331d70d237?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1520769945061-0a448c463865?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-3-spot-1',
+        day: 3,
+        name: 'Strokkur',
+        description: 'Geyser principal',
+        location: { lat: 64.3127, lng: -20.3006 },
+      },
+      {
+        id: 'mock-3-spot-2',
+        day: 3,
+        name: 'Gullfoss',
+        description: 'Belvedere principal',
+        location: { lat: 64.3271, lng: -20.1218 },
+      },
     ],
     createdAt: '2024-08-17T11:15:00Z',
   },
@@ -73,6 +128,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1587032411808-f49da4d32dde?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-4-spot-1',
+        day: 4,
+        name: 'Point derriere la cascade',
+        description: 'Passage humide mais magique',
+        location: { lat: 63.6157, lng: -19.9892 },
+      },
+    ],
     createdAt: '2024-08-18T16:45:00Z',
   },
   {
@@ -89,6 +153,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
     photos: [
       'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-5-spot-1',
+        day: 5,
+        name: 'Colonnes de basalte',
+        description: 'Details geologiques',
+        location: { lat: 63.4040, lng: -19.0451 },
+      },
     ],
     createdAt: '2024-08-19T13:20:00Z',
   },
@@ -108,6 +181,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-6-spot-1',
+        day: 6,
+        name: 'Diamond Beach',
+        description: 'Glacons sur le sable noir',
+        location: { lat: 64.0446, lng: -16.1799 },
+      },
+    ],
     createdAt: '2024-08-20T09:00:00Z',
   },
   {
@@ -123,6 +205,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
     },
     photos: [
       'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-7-spot-1',
+        day: 7,
+        name: 'Belvedere fjord',
+        description: 'Point de vue sur la cote',
+        location: { lat: 65.1702, lng: -13.9105 },
+      },
     ],
     createdAt: '2024-08-21T15:30:00Z',
   },
@@ -141,6 +232,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1517815683604-e5bb2fda8e89?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1548247929-11ffc9c24e5e?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-8-spot-1',
+        day: 8,
+        name: 'Dimmuborgir',
+        description: 'Champs de lave',
+        location: { lat: 65.5905, lng: -16.9117 },
+      },
+    ],
     createdAt: '2024-08-22T12:00:00Z',
   },
   {
@@ -156,6 +256,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
     },
     photos: [
       'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-9-spot-1',
+        day: 9,
+        name: 'Selfoss',
+        description: 'Cascade en amont de Dettifoss',
+        location: { lat: 65.8016, lng: -16.4076 },
+      },
     ],
     createdAt: '2024-08-23T10:30:00Z',
   },
@@ -174,6 +283,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-10-spot-1',
+        day: 10,
+        name: 'Eglise d Akureyri',
+        description: 'Repere de la ville',
+        location: { lat: 65.6839, lng: -18.0902 },
+      },
+    ],
     createdAt: '2024-08-24T14:00:00Z',
   },
   {
@@ -190,6 +308,15 @@ export const mockTravelUpdates: TravelUpdate[] = [
     photos: [
       'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1533112028616-25e177ecc5a3?w=1200&h=800&fit=crop',
+    ],
+    spots: [
+      {
+        id: 'mock-11-spot-1',
+        day: 11,
+        name: 'Kirkjufell',
+        description: 'Point photo iconique',
+        location: { lat: 64.9418, lng: -23.3081 },
+      },
     ],
     createdAt: '2024-08-25T11:45:00Z',
   },
@@ -208,9 +335,24 @@ export const mockTravelUpdates: TravelUpdate[] = [
       'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1200&h=800&fit=crop',
     ],
+    spots: [
+      {
+        id: 'mock-12-spot-1',
+        day: 12,
+        name: 'Blue Lagoon parking',
+        description: 'Dernier point avant le depart',
+        location: { lat: 63.8797, lng: -22.4473 },
+      },
+    ],
     createdAt: '2024-08-26T08:00:00Z',
   },
 ];
+
+export const mockTravelUpdates: TravelUpdate[] = mockTravelUpdatesRaw.map((update) => ({
+  ...update,
+  status: 'published',
+  photos: buildMockPhotos(update.id, update.photos),
+}));
 
 /**
  * Charge les données de test dans le localStorage
