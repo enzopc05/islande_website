@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import Header from '@/components/Header';
 import { TravelUpdate } from '@/types';
 import { getGalleryPhotos, getTravelUpdates, GalleryPhoto } from '@/lib/supabase-service';
@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { supabase } from '@/lib/supabaseClient';
 import { useSearchParams } from 'next/navigation';
 
-export default function GaleriePage() {
+function GaleriePageInner() {
   const searchParams = useSearchParams();
   const dayFilter = Number.parseInt(searchParams.get('day') || '', 10);
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -681,5 +681,13 @@ export default function GaleriePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function GaleriePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black"><Header /></div>}>
+      <GaleriePageInner />
+    </Suspense>
   );
 }
