@@ -67,6 +67,9 @@ export default function Home() {
   const [mapView, setMapView] = useState<'globe' | 'flat'>('globe'); // Vue 3D ou 2D
   const [selectedUpdate, setSelectedUpdate] = useState<TravelUpdate | null>(null);
   const [selectedUpdateIndex, setSelectedUpdateIndex] = useState<number>(-1);
+  const [showSpots, setShowSpots] = useState(true);
+  const [focusDay, setFocusDay] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     async function fetchUpdates() {
@@ -112,10 +115,34 @@ export default function Home() {
     fetchUpdates();
   }, []);
 
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)');
+    const updateMatch = () => setIsMobile(media.matches);
+    updateMatch();
+    media.addEventListener('change', updateMatch);
+    return () => media.removeEventListener('change', updateMatch);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && mapView === 'globe') {
+      setMapView('flat');
+    }
+  }, [isMobile, mapView]);
+
   // Mémoriser les updates visibles pour éviter les recalculs
   const visibleUpdates = useMemo(() => 
     updates.slice(0, visibleCount),
     [updates, visibleCount]
+  );
+
+  const maxDay = useMemo(
+    () => (updates.length ? Math.max(...updates.map((update) => update.day)) : 0),
+    [updates]
+  );
+
+  const intermediateSpots = useMemo(
+    () => updates.flatMap((update) => update.spots ?? []),
+    [updates]
   );
 
   // Charger plus d'updates
@@ -127,6 +154,7 @@ export default function Home() {
   const openUpdateDetail = (update: TravelUpdate, index: number) => {
     setSelectedUpdate(update);
     setSelectedUpdateIndex(index);
+    setFocusDay(update.day);
   };
 
   // Fermer le panneau
@@ -261,20 +289,56 @@ export default function Home() {
                 <p className="text-xs text-white/30 font-sans uppercase tracking-[0.4em]">
                   Cliquez et faites glisser pour explorer
                 </p>
+                <div className="mt-10 flex flex-col items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowSpots((prev) => !prev)}
+                    className={`px-6 py-3 border text-[10px] uppercase tracking-[0.4em] font-sans transition-all ${
+                      showSpots
+                        ? 'border-[#FFB347] text-[#FFB347] bg-[#FFB347]/10'
+                        : 'border-white/10 text-white/40 hover:text-white/70'
+                    }`}
+                  >
+                    {showSpots ? 'Masquer spots' : 'Afficher spots'}
+                  </button>
+
+                  {maxDay > 0 && (
+                    <div className="w-full max-w-xl">
+                      <div className="flex items-center justify-between text-[10px] text-white/40 uppercase tracking-wider font-sans mb-2">
+                        <span>Filtre jour</span>
+                        <span>{focusDay ? `Jour ${focusDay}` : 'Tous'}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={maxDay}
+                        step={1}
+                        value={focusDay ?? 0}
+                        onChange={(e) => {
+                          const value = Number.parseInt(e.target.value, 10);
+                          setFocusDay(value === 0 ? null : value);
+                        }}
+                        className="w-full accent-[#00BCD4]"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Sélecteur de vue */}
               <div className="flex justify-center gap-4 mb-12">
-                <button
-                  onClick={() => setMapView('globe')}
-                  className={`px-8 py-3 text-[10px] font-sans uppercase tracking-[0.4em] transition-all duration-300 ${
-                    mapView === 'globe'
-                      ? 'bg-[#00BCD4] text-black border-2 border-[#00BCD4]'
-                      : 'bg-transparent text-white/40 border-2 border-white/10 hover:border-white/30 hover:text-white/60'
-                  }`}
-                >
-                  Vue 3D Globe
-                </button>
+                {!isMobile && (
+                  <button
+                    onClick={() => setMapView('globe')}
+                    className={`px-8 py-3 text-[10px] font-sans uppercase tracking-[0.4em] transition-all duration-300 ${
+                      mapView === 'globe'
+                        ? 'bg-[#00BCD4] text-black border-2 border-[#00BCD4]'
+                        : 'bg-transparent text-white/40 border-2 border-white/10 hover:border-white/30 hover:text-white/60'
+                    }`}
+                  >
+                    Vue 3D Globe
+                  </button>
+                )}
                 <button
                   onClick={() => setMapView('flat')}
                   className={`px-8 py-3 text-[10px] font-sans uppercase tracking-[0.4em] transition-all duration-300 ${
@@ -289,11 +353,27 @@ export default function Home() {
 
               {/* Carte interactive - basculable */}
               <div className="relative overflow-hidden">
-                {mapView === 'globe' ? (
+                {mapView === 'globe' && !isMobile ? (
                   <GlobeMap updates={updates} />
                 ) : (
-                  <TravelMap updates={updates} />
+                  <TravelMap
+                    updates={updates}
+                    spots={intermediateSpots}
+                    showSpots={showSpots}
+                    focusDay={focusDay}
+                  />
                 )}
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-6 text-[10px] text-white/40 uppercase tracking-wider font-sans">
+                <span className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 rounded-full bg-[#00BCD4]"></span>
+                  Etapes
+                </span>
+                <span className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 rounded-full bg-[#FFB347]"></span>
+                  Spots
+                </span>
               </div>
 
               {/* Stats - épurées */}

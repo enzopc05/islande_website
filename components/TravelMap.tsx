@@ -1,16 +1,19 @@
 'use client';
 
 import { useEffect, useState, useMemo, memo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
-import { TravelUpdate } from '@/types';
+import { TravelUpdate, TravelSpot } from '@/types';
 import 'leaflet/dist/leaflet.css';
 
 interface TravelMapProps {
   updates: TravelUpdate[];
+  spots?: TravelSpot[];
+  showSpots?: boolean;
+  focusDay?: number | null;
 }
 
-const TravelMap = memo(function TravelMap({ updates }: TravelMapProps) {
+const TravelMap = memo(function TravelMap({ updates, spots = [], showSpots = true, focusDay = null }: TravelMapProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -21,12 +24,36 @@ const TravelMap = memo(function TravelMap({ updates }: TravelMapProps) {
   const icelandCenter: LatLngExpression = useMemo(() => [64.9631, -19.0208], []);
   
   // Mémoriser les points de la polyline pour éviter les recalculs
+  const visibleUpdates = useMemo(
+    () => (focusDay ? updates.filter((update) => update.day === focusDay) : updates),
+    [updates, focusDay]
+  );
+
   const pathPoints = useMemo<LatLngExpression[]>(() => 
-    updates
+    visibleUpdates
       .sort((a, b) => a.day - b.day)
       .map((update) => [update.location.lat, update.location.lng]),
-    [updates]
+    [visibleUpdates]
   );
+
+  const spotPoints = useMemo<TravelSpot[]>(() => spots.filter((spot) => spot.location), [spots]);
+
+  const focusTarget = useMemo<LatLngExpression | null>(() => {
+    if (!focusDay) return null;
+    const target = updates.find((update) => update.day === focusDay);
+    if (!target) return null;
+    return [target.location.lat, target.location.lng];
+  }, [updates, focusDay]);
+
+  function MapFocusUpdater({ target }: { target: LatLngExpression | null }) {
+    const map = useMap();
+    useEffect(() => {
+      if (target) {
+        map.setView(target, 10, { animate: true });
+      }
+    }, [map, target]);
+    return null;
+  }
 
   // Custom icon pour les markers (mémorisé) - DOIT être avant le early return
   const createCustomIcon = useMemo(() => (day: number) => {
@@ -80,8 +107,11 @@ const TravelMap = memo(function TravelMap({ updates }: TravelMapProps) {
         )}
 
         {/* Markers pour chaque étape */}
-        {updates.map((update) => {
-          const isTestPhoto = update.photos && update.photos.length > 0 && update.photos[0].startsWith('test-photo-');
+        <MapFocusUpdater target={focusTarget} />
+
+        {visibleUpdates.map((update) => {
+          const coverPhoto = update.photos?.[0];
+          const isTestPhoto = coverPhoto?.url?.startsWith('test-photo-');
           
           return (
             <Marker
@@ -94,9 +124,9 @@ const TravelMap = memo(function TravelMap({ updates }: TravelMapProps) {
                   <h3 className="font-bold text-lg mb-1">{update.title}</h3>
                   <p className="text-sm text-gray-600 mb-2">Jour {update.day}</p>
                   <p className="text-sm mb-2">{update.location.name}</p>
-                  {update.photos && update.photos.length > 0 && !isTestPhoto && (
+                  {update.photos && update.photos.length > 0 && coverPhoto && !isTestPhoto && (
                     <img
-                      src={update.photos[0]}
+                      src={coverPhoto.url}
                       alt={update.title}
                       className="w-full h-32 object-cover rounded"
                     />
@@ -111,6 +141,25 @@ const TravelMap = memo(function TravelMap({ updates }: TravelMapProps) {
             </Marker>
           );
         })}
+
+        {/* Spots intermediaires */}
+        {showSpots &&
+          spotPoints.map((spot) => (
+            <CircleMarker
+              key={spot.id}
+              center={[spot.location.lat, spot.location.lng]}
+              radius={5}
+              pathOptions={{ color: '#FFB347', fillColor: '#FFB347', fillOpacity: 0.9 }}
+            >
+              <Popup>
+                <div className="p-2">
+                  <h3 className="font-bold text-sm mb-1">{spot.name}</h3>
+                  <p className="text-xs text-gray-600 mb-2">Spot - Jour {spot.day}</p>
+                  {spot.description && <p className="text-xs">{spot.description}</p>}
+                </div>
+              </Popup>
+            </CircleMarker>
+          ))}
       </MapContainer>
     </div>
   );
