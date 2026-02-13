@@ -1629,7 +1629,7 @@ function ManageUpdatesTab({ updates, onEdit, onDuplicate, onDelete, onClearAll }
 // Component: Manage Spots Tab
 function ManageSpotsTab({ updates, onEditUpdate, onRemoveSpot, testMode }: any) {
   const spots = updates.flatMap((update: TravelUpdate) =>
-    (update.spots ?? []).map((spot) => ({
+    (update.spots ?? []).map((spot: TravelSpot) => ({
       ...spot,
       updateId: update.id,
       updateTitle: update.title,
