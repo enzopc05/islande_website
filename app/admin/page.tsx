@@ -1591,7 +1591,7 @@ function ManageUpdatesTab({ updates, onEdit, onDuplicate, onDelete, onClearAll }
 
                 {update.spots && update.spots.length > 0 && (
                   <div className="mt-3 text-[10px] text-white/40 uppercase tracking-wider font-sans">
-                    Spots: {update.spots.map((spot) => spot.name).join(' • ')}
+                    Spots: {update.spots.map((spot: TravelSpot) => spot.name).join(' • ')}
                   </div>
                 )}
               </div>
