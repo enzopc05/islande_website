@@ -1361,7 +1361,7 @@ function CreateUpdateForm({
 
           {spots.length > 0 && (
             <div className="space-y-2">
-              {spots.map((spot) => (
+              {spots.map((spot: TravelSpot) => (
                 <div key={spot.id} className="flex items-center justify-between gap-3 border border-white/10 px-4 py-3">
                   <div>
                     <p className="text-sm text-white/80">{spot.name}</p>
