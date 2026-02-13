@@ -113,6 +113,16 @@ export default function Header() {
               Galerie
             </Link>
             <Link
+              href="/auth"
+              className={`text-sm font-sans uppercase tracking-wider transition-all hover:scale-105 ${
+                shouldShowScrolledStyle
+                  ? 'text-gray-700 hover:text-[var(--glacier-blue)]'
+                  : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Connexion
+            </Link>
+            <Link
               href="/admin"
               className={`px-6 py-2.5 text-xs font-sans uppercase tracking-wider transition-all hover:scale-105 ${
                 shouldShowScrolledStyle
@@ -199,6 +209,12 @@ export default function Header() {
                 className="text-2xl font-display font-bold text-white hover:text-[var(--glacier-blue)] transition-colors"
               >
                 Galerie
+              </Link>
+              <Link
+                href="/auth"
+                className="text-2xl font-display font-bold text-white hover:text-[var(--glacier-blue)] transition-colors"
+              >
+                Connexion
               </Link>
               <div className="h-px bg-white/10 my-4"></div>
               <Link
