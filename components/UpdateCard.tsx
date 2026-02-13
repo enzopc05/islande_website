@@ -1,6 +1,7 @@
 import { TravelUpdate } from '@/types';
 import Image from 'next/image';
 import { memo } from 'react';
+import Link from 'next/link';
 
 interface UpdateCardProps {
   update: TravelUpdate;
@@ -17,9 +18,12 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
     });
   };
 
-  const isTestPhoto = (photoUrl: string) => {
-    return photoUrl.startsWith('test-photo-');
+  const isTestPhoto = (photoUrl?: string) => {
+    return photoUrl ? photoUrl.startsWith('test-photo-') : false;
   };
+
+  const coverPhoto = update.photos?.[0];
+  const hasCoverUrl = Boolean(coverPhoto?.url);
 
   return (
     <article 
@@ -27,9 +31,9 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
       className="group bg-black overflow-hidden transition-all duration-700 hover:shadow-[0_0_60px_rgba(0,188,212,0.15)] relative border-l-4 border-transparent hover:border-[#00BCD4] cursor-pointer"
     >
       {/* Photos */}
-      {update.photos && update.photos.length > 0 && (
+      {update.photos && update.photos.length > 0 && coverPhoto && hasCoverUrl && (
         <div className="relative h-[600px] w-full overflow-hidden">
-          {isTestPhoto(update.photos[0]) ? (
+          {isTestPhoto(coverPhoto.url) ? (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
               <div className="text-center">
                 <svg className="w-24 h-24 mx-auto text-white/10 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +44,7 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
             </div>
           ) : (
             <Image
-              src={update.photos[0]}
+              src={coverPhoto.url}
               alt={update.title}
               fill
               placeholder="blur"
@@ -62,7 +66,7 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
           </div>
 
           {/* Badge test si nécessaire */}
-          {update.photos && update.photos.length > 0 && isTestPhoto(update.photos[0]) && (
+          {update.photos && update.photos.length > 0 && hasCoverUrl && isTestPhoto(coverPhoto?.url) && (
             <div className="absolute top-12 right-12 z-10 bg-[#00BCD4] px-3 py-1">
               <span className="text-[10px] font-sans uppercase tracking-[0.3em] text-black font-bold">TEST</span>
             </div>
@@ -91,7 +95,7 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
       {/* Extrait - minimaliste */}
       <div className="px-12 py-16 bg-black">
         <p className="text-white/50 font-sans leading-loose text-sm mb-8 line-clamp-3">
-          {update.description}
+          {update.extras?.microStory || update.description}
         </p>
 
         <div className="flex items-center justify-between">
@@ -104,6 +108,13 @@ const UpdateCard = memo(function UpdateCard({ update, onClick }: UpdateCardProps
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
+          <Link
+            href={`/galerie?day=${update.day}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-[10px] text-white/30 font-sans uppercase tracking-[0.3em] hover:text-[#00BCD4] transition-colors"
+          >
+            Galerie du jour
+          </Link>
           {update.photos && update.photos.length > 1 && (
             <span className="text-[10px] text-white/20 font-sans tracking-wider">{update.photos.length} photos</span>
           )}
