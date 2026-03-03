@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 type GalleryInsert = {
   url: string;
   title?: string;
@@ -25,6 +25,14 @@ function isValidGalleryPhoto(photo: GalleryInsert): photo is GalleryInsert {
 }
 
 export async function POST(request: Request) {
+  let supabaseServer;
+  try {
+    supabaseServer = getSupabaseServerClient();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Missing Supabase server environment variables.';
+    return new NextResponse(message, { status: 500 });
+  }
+
   const payload = (await request.json()) as { photos: GalleryInsert[] };
 
   if (!payload?.photos || !Array.isArray(payload.photos) || payload.photos.length === 0) {
@@ -59,6 +67,14 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  let supabaseServer;
+  try {
+    supabaseServer = getSupabaseServerClient();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Missing Supabase server environment variables.';
+    return new NextResponse(message, { status: 500 });
+  }
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 

@@ -1,9 +1,17 @@
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+  let supabaseServer;
+  try {
+    supabaseServer = getSupabaseServerClient();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Missing Supabase server environment variables.';
+    return new NextResponse(message, { status: 500 });
+  }
+
   const bucket = process.env.SUPABASE_STORAGE_BUCKET;
 
   if (!bucket) {
